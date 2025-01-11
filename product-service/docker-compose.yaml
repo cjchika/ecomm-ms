@@ -10,12 +10,24 @@ services:
       - ./data:/data/db
     ports:
       - "27017:27017"
-#    networks:
-#      - ecomm-network
-#    restart: unless-stopped
-#
-#networks:
-#  ecomm-network:
-#
+    networks:
+      - ecomm-network
+
+  mongo-express:
+    image: mongo-express
+    container_name: mongo-express
+    environment:
+        ME_CONFIG_MONGODB_SERVER: mongodb
+        ME_CONFIG_MONGODB_ADMINUSERNAME: root
+        ME_CONFIG_MONGODB_ADMINPASSWORD: password
+        ME_CONFIG_MONGODB_AUTH_DATABASE: admin
+    ports:
+      - "8081:8081"
+    networks:
+      - ecomm-network
+
+networks:
+  ecomm-network:
+
 #volumes:
 #  postgres_data:
