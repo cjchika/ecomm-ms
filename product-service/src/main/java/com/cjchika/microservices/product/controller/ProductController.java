@@ -2,9 +2,7 @@ package com.cjchika.microservices.product.controller;
 
 import com.cjchika.microservices.product.dto.ProductRequest;
 import com.cjchika.microservices.product.dto.ProductResponse;
-import com.cjchika.microservices.product.model.Product;
 import com.cjchika.microservices.product.service.ProductService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
