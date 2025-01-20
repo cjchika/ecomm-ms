@@ -1,31 +1,31 @@
 services:
   postgres:
     image: postgres:latest
-    container_name: postgresdb
+    container_name: postgresdb-order
     environment:
       POSTGRES_USER: steeze
       POSTGRES_PASSWORD: steeze
       PGDATA: /data/postgres
     volumes:
-      - postgres_data:/data/postgres
+      - postgres_order_data:/data/postgres
       - ./docker/postgresql/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
-      - "5433:5432"
+      - "5439:5432"
     networks:
       - ecomm-network
     restart: unless-stopped
 
   pgadmin:
     image: dpage/pgadmin4:latest
-    container_name: pgadmin
+    container_name: pgadmin-order
     environment:
       PGADMIN_DEFAULT_EMAIL: pgadmin4@pgadmin.org
       PGADMIN_DEFAULT_PASSWORD: admin
       PGADMIN_CONFIG_SERVER_MODE: "False"
     volumes:
-      - pgadmin_data:/var/lib/pgadmin
+      - pgadmin_order_data:/var/lib/pgadmin
     ports:
-      - "5050:80"
+      - "5051:80"
     networks:
       - ecomm-network
     restart: unless-stopped
@@ -34,5 +34,5 @@ networks:
   ecomm-network:
 
 volumes:
-  postgres_data:
-  pgadmin_data:
+  postgres_order_data:
+  pgadmin_order_data:
