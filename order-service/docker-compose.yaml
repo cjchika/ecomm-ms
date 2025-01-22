@@ -1,5 +1,5 @@
 services:
-  postgres:
+  orderPostgres:
     image: postgres:latest
     container_name: postgresdb-order
     environment:
@@ -15,7 +15,7 @@ services:
       - ecomm-network
     restart: unless-stopped
 
-  pgadmin:
+  orderPgadmin:
     image: dpage/pgadmin4:latest
     container_name: pgadmin-order
     environment:
