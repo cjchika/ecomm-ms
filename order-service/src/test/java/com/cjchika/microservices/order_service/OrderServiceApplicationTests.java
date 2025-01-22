@@ -1,6 +1,6 @@
-package com.techie.microservices.order;
+package com.cjchika.microservices.order_service;
 
-import com.techie.microservices.order.stubs.InventoryClientStub;
+import com.cjchika.microservices.order_service.stubs.InventoryClientStub;
 import io.restassured.RestAssured;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,14 +18,14 @@ import static org.hamcrest.MatcherAssert.assertThat;
 class OrderServiceApplicationTests {
 
 	@ServiceConnection
-	static PostgreSQLContainer postgreSQLContainer = new PostgreSQLContainer("mysql:8.3.0");
+	static PostgreSQLContainer postgreSQLContainer = new PostgreSQLContainer("postgres:latest");
 	@LocalServerPort
 	private Integer port;
 
 	@BeforeEach
 	void setup() {
 		 RestAssured.baseURI = "http://localhost";
-		postgreSQLContainer. = port;
+		 RestAssured.port = port;
 	}
 
 	static {
@@ -54,7 +54,7 @@ class OrderServiceApplicationTests {
 				.extract()
 				.body().asString();
 
-		assertThat(responseBodyString, Matchers.is("Order Placed Successfully"));
+		assertThat(responseBodyString, Matchers.is("Order Placed Successfully!"));
 	}
 
 	@Test
