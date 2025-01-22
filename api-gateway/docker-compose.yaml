@@ -1,0 +1,37 @@
+services:
+  keycloak-postgres:
+    image: postgres:latest
+    container_name: postgres-keycloak
+    environment:
+      POSTGRES_ROOT_PASSWORD: root
+      POSTGRES_DATABASE: keycloak
+      POSTGRES_USER: steeze
+      POSTGRES_PASSWORD: steeze
+      PGDATA: /data/postgres
+    volumes:
+      - postgres_keycloak_data:/data/postgres
+    ports:
+      - "5454:5432"
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0.1
+    container_name: keycloak
+    command: ["start-dev", "--import-realm"]
+    environment:
+      DB_VENDOR: POSTGRESQL
+      DB_ADDR: postgresql
+      DB_DATABASE: keycloak
+      DB_USER: keycloak
+      DB_PASSWORD: password
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    ports:
+      - "8181:8080"
+    volumes:
+      - keycloak_data:/opt/keycloak/data/import/
+    depends_on:
+      - keycloak-postgres
+
+volumes:
+  postgres_keycloak_data:
+  keycloak_data:
