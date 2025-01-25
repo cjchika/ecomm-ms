@@ -16,11 +16,11 @@ services:
     restart: unless-stopped
 
   zookeeper:
-    image: confluence/cp-zookeeper:7.5.0
+    image: confluentinc/cp-zookeeper:7.5.0
     hostname: zookeeper
     container_name: zookeeper
     ports:
-      - "2181":"2181"
+      - "2181:2181"
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
@@ -40,30 +40,31 @@ services:
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:29092,PLAINTEXT_HOST://localhost:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
 
-    schema-registry:
-      image: confluentinc/cp-schema-registry:7.5.0
-      hostname: schema-registry
-      container_name: schema-registry
-      depends_on:
-        - broker
-      ports:
-        - "8085:8081"
-      environment:
-        SCHEMA_REGISTRY_HOST_NAME: schema-registry
-        SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'broker:29092'
-        SCHEMA_REGISTRY_LISTENERS: http://schema-registry:8081
-    kafka-ui:
-      container_name: kafka-ui
-      image: provectuslabs/kafka-ui:latest
-      ports:
-        - "8086:8080"
-      depends_on:
-        - broker
-      environment:
-        KAFKA_CLUSTERS_NAME: local
-        KAFKA_CLUSTERS_BOOTSTRAPSERVERS: broker:29092
-        #      KAFKA_CLUSTERS_SCHEMAREGISTRY: http://schema-registry:8081
-        DYNAMIC_CONFIG_ENABLED: 'true'
+  schema-registry:
+    image: confluentinc/cp-schema-registry:7.5.0
+    hostname: schema-registry
+    container_name: schema-registry
+    depends_on:
+      - broker
+    ports:
+      - "8085:8081"
+    environment:
+      SCHEMA_REGISTRY_HOST_NAME: schema-registry
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'broker:29092'
+      SCHEMA_REGISTRY_LISTENERS: http://schema-registry:8081
+
+  kafka-ui:
+    container_name: kafka-ui
+    image: provectuslabs/kafka-ui:latest
+    ports:
+      - "8086:8080"
+    depends_on:
+      - broker
+    environment:
+      KAFKA_CLUSTERS_NAME: local
+      KAFKA_CLUSTERS_BOOTSTRAPSERVERS: broker:29092
+      #      KAFKA_CLUSTERS_SCHEMAREGISTRY: http://schema-registry:8081
+      DYNAMIC_CONFIG_ENABLED: 'true'
 
   orderPgadmin:
     image: dpage/pgadmin4:latest
