@@ -6,6 +6,8 @@ import com.cjchika.microservices.order_service.event.OrderPlacedEvent;
 import com.cjchika.microservices.order_service.model.Order;
 import com.cjchika.microservices.order_service.repository.OrderRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final InventoryClient inventoryClient;
     private final KafkaTemplate<String, OrderPlacedEvent> kafkaTemplate;
+    private static final Logger logger = LoggerFactory.getLogger(OrderService.class);
 
     public OrderService(OrderRepository orderRepository, InventoryClient inventoryClient, KafkaTemplate kafkaTemplate) {
         this.orderRepository = orderRepository;
@@ -42,9 +45,9 @@ public class OrderService {
             orderPlacedEvent.setEmail(orderRequest.userDetails().email());
             orderPlacedEvent.setFirstName(orderRequest.userDetails().firstName());
             orderPlacedEvent.setLastName(orderRequest.userDetails().lastName());
-            log.info("Start - Sending OrderPlacedEvent {} to Kafka topic order-placed!", orderPlacedEvent);
+            logger.info("Start - Sending OrderPlacedEvent {} to Kafka topic order-placed!", orderPlacedEvent);
             kafkaTemplate.send("order-placed", orderPlacedEvent);
-            log.info("End - Sending OrderPlacedEvent {} to Kafka topic order-placed successful!", orderPlacedEvent);
+            logger.info("End - Sending OrderPlacedEvent {} to Kafka topic order-placed successful!", orderPlacedEvent);
         } else {
             throw new RuntimeException("Product with SkuCode " + orderRequest.skuCode() + " is not in stock");
         }
