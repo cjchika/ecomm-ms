@@ -19,7 +19,7 @@ services:
     command: ["start-dev", "--import-realm"]
     environment:
       DB_VENDOR: POSTGRESQL
-      DB_ADDR: postgresql
+      DB_ADDR: keycloak-postgres
       DB_DATABASE: keycloak
       DB_USER: keycloak
       DB_PASSWORD: password
@@ -35,8 +35,7 @@ services:
   loki:
     image: grafana/loki:main
     container_name: loki
-    command:
-      - ["-config.file=/etc/loki/local-config.yaml"]
+    command: ["-config.file=/etc/loki/local-config.yaml"]
     ports:
       - "3100:3100"
 
@@ -44,7 +43,7 @@ services:
     image: prom/prometheus:v2.46.0
     container_name: prometheus
     command:
-      - --enable-feature=examplar-storage
+      - --enable-feature=exemplar-storage
       - --config.file=/etc/prometheus/prometheus.yml
     volumes:
       - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
@@ -53,7 +52,7 @@ services:
 
   tempo:
     image: grafana/tempo:2.2.2
-    container_name: grafana-tempo
+    container_name: tempo
     command: ["-config.file=/etc/tempo.yaml"]
     volumes:
       - ./docker/tempo/tempo.yml:/etc/tempo.yaml:ro
@@ -66,7 +65,7 @@ services:
     image: grafana/grafana:10.1.0
     container_name: grafana
     volumes:
-      - ./docker/grafana:/etc/grafana/provisioning/datasource:ro
+      - ./docker/grafana:/etc/grafana/provisioning/datasources:ro
     environment:
       - GF_AUTH_ANONYMOUS_ENABLED=true
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin

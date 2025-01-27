@@ -6,7 +6,7 @@ scrape_configs:
   - job_name: 'api-gateway'
     metrics_path: '/actuator/prometheus'
     static_configs:
-      - targets: ['host.docker.internal:9000'] ## only for demo purposes don't use host.docker.internal in production
+      - targets: ['host.docker.internal:8084'] ## only for demo purposes don't use host.docker.internal in production
   - job_name: 'product-service'
     metrics_path: '/actuator/prometheus'
     static_configs:
