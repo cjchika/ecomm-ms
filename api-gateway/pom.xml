@@ -29,6 +29,7 @@
 	<properties>
 		<java.version>21</java.version>
 		<spring-cloud.version>2024.0.0</spring-cloud.version>
+		<dockerPassword>${dockerPassword}</dockerPassword>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -81,6 +82,19 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<image>
+						<name>cjchika/${project.artifactId}</name>
+						<publish>true</publish>
+						<!--						<builder>dashaun/builder:tinu</builder>-->
+					</image>
+					<docker>
+						<publishRegistry>
+							<username>cjchika</username>
+							<password>${dockerPassword}</password>
+						</publishRegistry>
+					</docker>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
