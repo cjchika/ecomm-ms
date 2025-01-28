@@ -20,10 +20,25 @@ spec:
         ports:
         - containerPort: 5432
         env:
-        - name: POSTGRES_USER:
-          value: steeze
-        - name: POSTGRES_PASSWORD:
-          value: steeze
+          - name: POSTGRES_USER
+            value: steeze
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: POSTGRES_PASSWORD
+                name: postgres-secrets
+        volumeMounts:
+          - mountPath: /var/lib/postgresql
+            name: postgresql-data
+          - mountPath: /docker-entrypoint-initdb.d
+            name: postgres-initdb-config
+      volumes:
+        - name: postgresql-data
+          persistentVolumeClaim:
+            claimName: postgres-pvc
+        - name: postgres-initdb-config
+          configMap:
+            name: postgres-initdb-config
 
 ---
 
@@ -41,3 +56,50 @@ spec:
   selector:
     app: postgres
   type: ClusterIP
+
+---
+
+apiVersion: v1
+data:
+  POSTGRES_PASSWORD: c3RlZXpl
+kind: Secret
+metadata:
+  name: postgres-secrets
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: postgres-pv
+spec:
+  storageClassName: 'standard'
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 1Gi
+  hostPath:
+    path: /data/postgres
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pvc
+spec:
+  storageClassName: 'standard'
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-initdb-config
+data:
+  initdb.sql: |
+    CREATE DATABASE order_service;
+    CREATE DATABASE inventory_service;
