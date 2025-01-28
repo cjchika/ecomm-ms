@@ -24,7 +24,7 @@ import java.time.Duration;
 @RequiredArgsConstructor
 public class RestClientConfig {
 
-    @Value("${inventory.url}")
+    @Value("${inventory.service.url}")
     private String inventoryServiceUrl;
     private final ObservationRegistry observationRegistry;
 
